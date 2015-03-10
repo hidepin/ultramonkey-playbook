@@ -1,0 +1,9 @@
+ansible_ssh_user: root
+sudo: no
+colon: ":"
+ntp_server: 192.168.0.1
+common_user:
+  # user/password="hidepin/hidepin123"
+  - { name: 'hidepin', password: '$1$SomeSalt$Drh7s/vUcl5XnIZ/Neglz1', uid: '2001', group: 'hidepin', gid: '2001' }
+
+
