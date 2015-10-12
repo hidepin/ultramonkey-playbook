@@ -53,3 +53,6 @@
   with_items:
     - elasticsearch
     - httpd
+
+- name: kibana config setting
+  template: src=kibana_config.js.j2 dest=/var/www/html/kibana/config.js owner=root group=root mode=0644

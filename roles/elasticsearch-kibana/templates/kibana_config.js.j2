@@ -26,7 +26,7 @@ function (Settings) {
      *
      * Note: this can also be an object if you want to pass options to the http client. For example:
      *
-     *  +elasticsearch: {server: "http://localhost:9200", withCredentials: true}+
+     *  +elasticsearch: {server: "http://{{ansible_default_ipv4.address}}:9200", withCredentials: true}+
      *
      */
     elasticsearch: "http://"+window.location.hostname+":9200",
