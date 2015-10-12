@@ -1,0 +1,40 @@
+---
+# file: roles/elasticsearch-kibana/tasks/main.yml
+- name: packages install
+  yum: name={{item}} state=present
+  with_items:
+    - httpd
+
+- name: elasticsearch check
+  command: rpm -q elasticsearch
+  register: is_elasticsearch_installed
+  failed_when: is_elasticsearch_installed.rc not in [0,1]
+  changed_when: is_elasticsearch_installed.rc != 0
+
+- name: elasticsearch install
+  yum: name={{item}} state=present
+  with_items:
+    - "{{ elasticsearch_rpm }}"
+  when: is_elasticsearch_installed.rc == 1
+
+- name: kibana check
+  command: ls /var/www/html/kibana
+  register: is_kibana_installed
+  failed_when: is_kibana_installed.rc not in [0,2]
+  changed_when: is_kibana_installed.rc != 0
+
+- name: get kibana
+  get_url: url="{{ kibana_pkg }}" dest=/tmp/kibana
+  when: is_kibana_installed.rc == 2
+
+- name: extract kibana
+  unarchive: src=/tmp/kibana dest=/var/www/html copy=no owner=root group=root
+  when: is_kibana_installed.rc == 2
+
+- name: kibana extract check
+  shell: ls -d /var/www/html/kibana-*
+  register: is_kibana_extracted
+  changed_when: is_kibana_extracted.rc != 0
+
+- name: current kibana link
+  file: src={{ is_kibana_extracted.stdout }} dest=/var/www/html/kibana state=link
