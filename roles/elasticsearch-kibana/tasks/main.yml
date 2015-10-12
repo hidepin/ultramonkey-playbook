@@ -4,6 +4,7 @@
   yum: name={{item}} state=present
   with_items:
     - httpd
+    - java-1.7.0-openjdk
 
 - name: elasticsearch check
   command: rpm -q elasticsearch
@@ -38,3 +39,17 @@
 
 - name: current kibana link
   file: src={{ is_kibana_extracted.stdout }} dest=/var/www/html/kibana state=link
+
+- name: elasticsarch startup setting
+  template: src=etc_sysconfig_elasticsearch.j2 dest=/etc/sysconfig/elasticsearch owner=root group=root mode=0644
+  notify: elasticsearch restart
+
+- name: elasticsarch config setting
+  template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml owner=root group=root mode=0644
+  notify: elasticsearch restart
+
+- name: elasticsearch kibana service
+  service: name={{item}} state=started enabled=yes
+  with_items:
+    - elasticsearch
+    - httpd
