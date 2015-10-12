@@ -3,4 +3,4 @@ sudo: no
 colon: ":"
 ntp_server: 192.168.0.1
 elasticsearch_rpm: https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.noarch.rpm
-kibana_pkg: https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz
+kibana_pkg: https://download.elastic.co/kibana/kibana/kibana-3.1.2.tar.gz
