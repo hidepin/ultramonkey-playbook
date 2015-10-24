@@ -3,7 +3,6 @@
 - name: packages install
   yum: name={{item}} state=present
   with_items:
-    - httpd
     - java-1.7.0-openjdk
 
 - name: elasticsearch check
@@ -26,8 +25,11 @@
   template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml owner=root group=root mode=0644
   notify: elasticsearch restart
 
+- name: create opt dir
+  file: path=/opt state=directory mode=0755
+
 - name: kibana check
-  command: ls /var/www/html/kibana
+  command: ls /opt/kibana
   register: is_kibana_installed
   failed_when: is_kibana_installed.rc not in [0,2]
   changed_when: is_kibana_installed.rc != 0
@@ -37,22 +39,30 @@
   when: is_kibana_installed.rc == 2
 
 - name: extract kibana
-  unarchive: src=/tmp/kibana dest=/var/www/html copy=no owner=root group=root
+  unarchive: src=/tmp/kibana dest=/opt copy=no owner=root group=root
   when: is_kibana_installed.rc == 2
 
 - name: kibana extract check
-  shell: ls -d /var/www/html/kibana-*
+  shell: ls -d /opt/kibana-*
   register: is_kibana_extracted
   changed_when: is_kibana_extracted.rc != 0
 
 - name: current kibana link
-  file: src={{ is_kibana_extracted.stdout }} dest=/var/www/html/kibana state=link
+  file: src={{ is_kibana_extracted.stdout }} dest=/opt/kibana state=link
+
+- name: chown kibana dir
+  file: path=/opt/kibana/ owner=root group=root recurse=yes
 
 - name: kibana config setting
-  template: src=kibana_config.js.j2 dest=/var/www/html/kibana/config.js owner=root group=root mode=0644
+  template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml owner=root group=root mode=0644
+  notify: kibana restart
+
+- name: kibana init script
+  template: src=etc_init.d_kibana.j2 dest=/etc/init.d/kibana owner=root group=root mode=0755
+  notify: kibana restart
 
 - name: elasticsearch kibana service
   service: name={{item}} state=started enabled=yes
   with_items:
     - elasticsearch
-    - httpd
+    - kibana
