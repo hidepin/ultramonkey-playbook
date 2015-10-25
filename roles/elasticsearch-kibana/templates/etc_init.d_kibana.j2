@@ -23,7 +23,7 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin:$KIBANA_BIN
 DAEMON=$KIBANA_BIN/$NAME
 
 # Configure User to run daemon process
-DAEMON_USER=root
+DAEMON_USER="{{ kibana_user }}"
 # Configure logging location
 KIBANA_LOG=/var/log/kibana.log
 

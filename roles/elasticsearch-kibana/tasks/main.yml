@@ -25,6 +25,9 @@
   template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml owner=root group=root mode=0644
   notify: elasticsearch restart
 
+- name: create kibana_user
+  user: name="{{ kibana_user }}" shell=/bin/false
+
 - name: create opt dir
   file: path=/opt state=directory mode=0755
 
@@ -39,7 +42,7 @@
   when: is_kibana_installed.rc == 2
 
 - name: extract kibana
-  unarchive: src=/tmp/kibana dest=/opt copy=no owner=root group=root
+  unarchive: src=/tmp/kibana dest=/opt copy=no owner="{{ kibana_user }}" group="{{ kibana_user }}"
   when: is_kibana_installed.rc == 2
 
 - name: kibana extract check
@@ -51,10 +54,10 @@
   file: src={{ is_kibana_extracted.stdout }} dest=/opt/kibana state=link
 
 - name: chown kibana dir
-  file: path=/opt/kibana/ owner=root group=root recurse=yes
+  file: path=/opt/kibana/ owner="{{ kibana_user }}" group="{{ kibana_user }}" recurse=yes
 
 - name: kibana config setting
-  template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml owner=root group=root mode=0644
+  template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml owner="{{ kibana_user }}" group="{{ kibana_user }}" mode=0644
   notify: kibana restart
 
 - name: kibana init script
