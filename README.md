@@ -3,14 +3,22 @@ common-ansible-role
 
 # 概要
 
-OS初期インストール時の共通設定
+OS初期インストール時の共通設定。
+設定変更したファイルと変更前のファイルをバックアップを取得。
+設定変更後再起動を実行。
 
 1. 共通パッケージのインストール
 2. selinuxの無効化
 3. firewallの無効化
 4. networkの基本設定
-5. ntpの設定
-6. ユーザを作成
+  - NetworkManagerの無効化
+  - hostsファイルの設定
+  - NOZEROCONFの設定
+  - ipv6設定の無効化
+5. OS環境設定
+  - coreのサイズをulimit化
+6. ntpの設定
+7. ユーザを作成
 
 # 動作確認済み環境
 
