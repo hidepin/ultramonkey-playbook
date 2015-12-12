@@ -3,3 +3,5 @@
 - name: ntpd restart
   service: name=ntpd state=restarted
 
+- name: chronyd restart
+  service: name=chronyd state=restarted
