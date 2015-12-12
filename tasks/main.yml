@@ -46,15 +46,20 @@
 
 - name: ntp step-tickers settings
   template: src=etc_ntp_step-tickers.j2 dest=/etc/ntp/step-tickers owner=root group=root mode=0644 backup=true
+  when: ntp_server is defined
   notify:
     - ntpd restart
 
 - name: ntp.conf settings
   template: src=ntp.conf.j2 dest=/etc/ntp.conf owner=root group=root mode=0644 backup=true
+  when: ntp_server is defined
+  notify:
     - ntpd restart
 
 - name: /etc/sysconfig/ntpd settings
   template: src=etc_sysconfig_ntpd.j2 dest=/etc/sysconfig/ntpd owner=root group=root mode=0644 backup=true
+  when: ntp_server is defined
+  notify:
     - ntpd restart
 
 - name: ntpd running check
@@ -65,21 +70,24 @@
 
 - name: run ntpdate
   service: name=ntpdate state=started
-  when: running_ntpd.rc == 1
+  when: running_ntpd.rc == 1 and ntp_server is defined
 
 - name: enable ntpdate service
   service: name=ntpdate enabled=yes
+  when: ntp_server is defined
 
 - name: enable services
   service: name={{item}} state=started enabled=yes
   with_items:
     - ntpd
+  when: ntp_server is defined
 
 - name: Add common group
   group:
     name={{item.group}}
     gid={{item.gid}}
   with_items: common_user
+  when: common_user is defined
 
 - name: Add common user
   user:
@@ -89,3 +97,4 @@
     group="{{item.group}}"
     comment="{{item.name}}"
   with_items: common_user
+  when: common_user is defined
