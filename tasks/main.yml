@@ -98,6 +98,10 @@
   file: path={{is_ulimits_setting.backup_file}} state=absent
   when: is_ulimits_setting|changed and is_ulimits_setting.backup_file is defined
 
+- name: CentOS6 only setting
+  include: centos6.yml
+  when: ansible_distribution_major_version == '6'
+
 - name: Add common group
   group:
     name={{item.group}}
@@ -114,10 +118,6 @@
     comment="{{item.name}}"
   with_items: common_user
   when: common_user is defined
-
-- name: CentOS6 only setting
-  include: centos6.yml
-  when: ansible_distribution_major_version == '6'
 
 - name: reboot after change selinux
   shell: nohup bash -c "sleep 2s && reboot" &
