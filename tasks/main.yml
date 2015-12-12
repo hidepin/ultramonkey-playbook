@@ -8,8 +8,12 @@
     - ntp
 
 - name: disable selinux
-  selinux: state=disabled
-  when: ansible_selinux.config_mode is not defined or ansible_selinux.config_mode != "disabled"
+  shell: setenforce Permissive
+  when: ansible_selinux.status is not defined or ansible_selinux.status != "disabled"
+
+- name: disable selinux setting
+  lineinfile: dest=/etc/selinux/config regexp='^SELINUX=.*' line="SELINUX=disabled" state=present backup=true
+  when: ansible_selinux.status is not defined or ansible_selinux.status != "disabled"
 
 - name: reboot after change selinux
   shell: nohup bash -c "sleep 2s && reboot" &
