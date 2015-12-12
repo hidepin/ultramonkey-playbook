@@ -29,12 +29,21 @@
   file: path={{is_selinux_setting.backup}} state=absent
   when: is_selinux_setting|changed
 
-- name: disable services
+- name: disable firewall services
   service: name={{item}} state=stopped enabled=no
   with_items:
     - iptables
     - ip6tables
-#    - NetworkManager
+
+- name: check NetworkManager
+  shell: rpm -q NetworkManager
+  register: is_networkmanager_installed
+  failed_when: is_networkmanager_installed.rc not in [0,1]
+  changed_when: is_networkmanager_installed.rc not in [0,1]
+
+- name: disable NetworkManager service
+  service: name=NetworkManager state=stopped enabled=no
+  when: is_networkmanager_installed.rc == 0
 
 - name: generate hosts files
   lineinfile: dest=/etc/hosts regexp='^{{item}}.*' line="{{item}} {{hostvars[item].ansible_fqdn}} {{hostvars[item].ansible_hostname}}" state=present backup=true
