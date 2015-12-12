@@ -99,7 +99,7 @@
     dest="backup/{{ansible_date_time.date}}-{{ansible_date_time.time|regex_replace(':', '')}}"
   with_items:
     - "{{is_ulimits_setting.backup_file}}"
-    - /etc/profiled.d/enableulimit.sh
+    - /etc/profile.d/enableulimit.sh
   when: is_ulimits_setting|changed
 
 - name: delete ulimits setting backup
