@@ -15,7 +15,8 @@
     dest=/etc/selinux/config
     regexp='^SELINUX=.*'
     line="SELINUX=disabled"
-    state=present backup=true
+    state=present
+    backup=true
   register: is_selinux_setting
 
 - name: backup selinux setting
