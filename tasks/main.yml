@@ -128,7 +128,7 @@
     name="{{ item.group }}"
     gid="{{ item.gid }}"
   with_items: "{{ common_user }}"
-  when: common_user is defined
+  when: common_user is defined and common_user != None
 
 - name: Add common user
   user:
@@ -138,7 +138,7 @@
     group="{{ item.group }}"
     comment="{{ item.name }}"
   with_items: "{{ common_user }}"
-  when: common_user is defined
+  when: common_user is defined and common_user != None
 
 - name: CentOS6 only setting
   include: centos6.yml
