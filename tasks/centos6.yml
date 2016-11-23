@@ -1,7 +1,7 @@
 ---
 # file: roles/common/tasks/centos6.yml
 - name: (centos6) disable firewall services
-  service: name={{item}} state=stopped enabled=no
+  service: name="{{ item }}" state=stopped enabled=no
   with_items:
     - iptables
     - ip6tables
@@ -21,7 +21,13 @@
   when: ntp_server is defined
 
 - name: (centos6) ntp step-tickers settings
-  template: src=etc_ntp_step-tickers.j2 dest=/etc/ntp/step-tickers owner=root group=root mode=0644 backup=true
+  template:
+    src=etc_ntp_step-tickers.j2
+    dest=/etc/ntp/step-tickers
+    owner=root
+    group=root
+    mode=0644
+    backup=true
   register: is_step_tickers_setting
   when: ntp_server is defined
   notify:
@@ -29,15 +35,15 @@
 
 - name: (centos6) backup step-tickers setting
   fetch:
-    src={{item}}
-    dest="backup/{{ansible_date_time.date}}-{{ansible_date_time.time|regex_replace(':', '')}}"
+    src="{{ item }}"
+    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
   with_items:
-    - "{{is_step_tickers_setting.backup_file}}"
+    - "{{ is_step_tickers_setting.backup_file|default() }}"
     - /etc/ntp/step-tickers
   when: is_step_tickers_setting|changed
 
 - name: (centos6) delete step-tickers setting backup
-  file: path={{is_step_tickers_setting.backup_file}} state=absent
+  file: path="{{ is_step_tickers_setting.backup_file }}" state=absent
   when: is_step_tickers_setting|changed
 
 - name: (centos6) ntp.conf settings
@@ -49,15 +55,15 @@
 
 - name: (centos6) backup ntp.conf setting
   fetch:
-    src={{item}}
-    dest="backup/{{ansible_date_time.date}}-{{ansible_date_time.time|regex_replace(':', '')}}"
+    src="{{ item }}"
+    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
   with_items:
-    - "{{is_ntp_conf_setting.backup_file}}"
+    - "{{ is_ntp_conf_setting.backup_file|default() }}"
     - /etc/ntp.conf
   when: is_ntp_conf_setting|changed
 
 - name: (centos6) delete ntp.conf setting backup
-  file: path={{is_ntp_conf_setting.backup_file}} state=absent
+  file: path="{{ is_ntp_conf_setting.backup_file }}" state=absent
   when: is_ntp_conf_setting|changed
 
 - name: (centos6) /etc/sysconfig/ntpd settings
@@ -69,15 +75,15 @@
 
 - name: (centos6) backup ntpd setting
   fetch:
-    src={{item}}
-    dest="backup/{{ansible_date_time.date}}-{{ansible_date_time.time|regex_replace(':', '')}}"
+    src="{{ item }}"
+    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
   with_items:
-    - "{{is_ntpd_setting.backup_file}}"
+    - "{{ is_ntpd_setting.backup_file|default() }}"
     - /etc/sysconfig/ntpd
   when: is_ntpd_setting|changed
 
 - name: (centos6) delete ntpd setting backup
-  file: path={{is_ntpd_setting.backup_file}} state=absent
+  file: path="{{ is_ntpd_setting.backup_file }}" state=absent
   when: is_ntpd_setting|changed
 
 - name: (centos6) ntpd running check
