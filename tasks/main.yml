@@ -11,7 +11,7 @@
   when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
 
 - name: disable selinux setting
-  lineinfile:
+  lineinfile: >
     dest=/etc/selinux/config
     regexp='^SELINUX=.*'
     line="SELINUX=disabled"
@@ -19,21 +19,8 @@
     backup=true
   register: is_selinux_setting
 
-- name: backup selinux setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_selinux_setting.backup }}"
-    - /etc/selinux/config
-  when: is_selinux_setting|changed
-
-- name: delete selinux setting backup
-  file: path="{{ is_selinux_setting.backup }}" state=absent
-  when: is_selinux_setting|changed
-
 - name: generate hosts files
-  lineinfile:
+  lineinfile: >
     dest=/etc/hosts
     regexp='^{{ item }}.*'
     line="{{ item }} {{ hostvars[item].ansible_fqdn }} {{ hostvars[item].ansible_hostname }}"
@@ -43,21 +30,8 @@
   register: is_hosts_setting
   with_items: "{{ groups['all'] }}"
 
-- name: backup hosts setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_hosts_setting.results[0].backup }}"
-    - /etc/hosts
-  when: is_hosts_setting|changed
-
-- name: delete hosts setting backup
-  file: path="{{ is_hosts_setting.results[0].backup }}" state=absent
-  when: is_hosts_setting|changed
-
 - name: Add NOZEROCONF
-  lineinfile:
+  lineinfile: >
     dest=/etc/sysconfig/network
     regexp="^NOZEROCONF"
     line="NOZEROCONF=yes"
@@ -65,21 +39,8 @@
     backup=true
   register: is_network_setting
 
-- name: backup network setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_network_setting.backup }}"
-    - /etc/sysconfig/network
-  when: is_network_setting|changed
-
-- name: delete network setting backup
-  file: path="{{ is_network_setting.backup }}" state=absent
-  when: is_network_setting|changed
-
 - name: Disable ipv6
-  lineinfile:
+  lineinfile: >
     dest=/etc/modprobe.d/ipv6.conf
     regexp='^options ipv6 disable.*'
     line="options ipv6 disable=1"
@@ -88,21 +49,8 @@
     backup=true
   register: is_ipv6_setting
 
-- name: backup ipv6 setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_ipv6_setting.backup }}"
-    - /etc/modprobe.d/ipv6.conf
-  when: is_ipv6_setting|changed
-
-- name: delete ipv6 setting backup
-  file: path="{{ is_ipv6_setting.backup }}" state=absent
-  when: is_ipv6_setting|changed
-
 - name: add ulimits settings
-  template:
+  template: >
     src=enableulimit.sh.j2
     dest=/etc/profile.d/enableulimit.sh
     owner=root
@@ -111,21 +59,19 @@
     backup=true
   register: is_ulimits_setting
 
-- name: backup ulimits setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
+- name: backup settings
+  include: backup.yml
   with_items:
-    - "{{ is_ulimits_setting.backup_file|default() }}"
-    - /etc/profile.d/enableulimit.sh
-  when: is_ulimits_setting|changed
-
-- name: delete ulimits setting backup
-  file: path="{{ is_ulimits_setting.backup_file }}" state=absent
-  when: is_ulimits_setting|changed and is_ulimits_setting.backup_file is defined
+    - "{{ is_selinux_setting }}"
+    - "{{ is_hosts_setting.results[0] }}"
+    - "{{ is_network_setting }}"
+    - "{{ is_ipv6_setting }}"
+    - "{{ is_ulimits_setting }}"
+  loop_control:
+    loop_var: backup_item
 
 - name: Add common group
-  group:
+  group: >
     name="{{ item.group }}"
     gid="{{ item.gid }}"
   with_items: "{{ common_user }}"
