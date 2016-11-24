@@ -1,5 +1,34 @@
 ---
 # file: roles/common/tasks/centos6.yml
+- name: (centos6) Add NOZEROCONF
+  lineinfile: >
+    dest=/etc/sysconfig/network
+    regexp="^NOZEROCONF"
+    line="NOZEROCONF=yes"
+    state=present
+    backup=true
+  register: is_network_setting
+
+- name: (centos6) Disable ipv6
+  lineinfile: >
+    dest=/etc/modprobe.d/ipv6.conf
+    regexp='^options ipv6 disable.*'
+    line="options ipv6 disable=1"
+    state=present
+    create=yes
+    backup=true
+  register: is_ipv6_setting
+
+- name: (centos6) add ulimits settings
+  template: >
+    src=enableulimit.sh.j2
+    dest=/etc/profile.d/enableulimit.sh
+    owner=root
+    group=root
+    mode=0644
+    backup=true
+  register: is_ulimits_setting
+
 - name: (centos6) disable firewall services
   service: name="{{ item }}" state=stopped enabled=no
   with_items:
@@ -80,6 +109,9 @@
 - name: backup settings
   include: backup.yml
   with_flattened:
+    - "{{ is_network_setting|default() }}"
+    - "{{ is_ipv6_setting|default() }}"
+    - "{{ is_ulimits_setting|default() }}"
     - "{{ is_step_tickers_setting|default() }}"
     - "{{ is_ntp_conf_setting|default() }}"
     - "{{ is_ntpd_setting|default() }}"

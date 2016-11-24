@@ -31,44 +31,12 @@
     register: is_hosts_setting
     with_items: "{{ groups['all'] }}"
 
-  - name: Add NOZEROCONF
-    lineinfile: >
-      dest=/etc/sysconfig/network
-      regexp="^NOZEROCONF"
-      line="NOZEROCONF=yes"
-      state=present
-      backup=true
-    register: is_network_setting
-
-  - name: Disable ipv6
-    lineinfile: >
-      dest=/etc/modprobe.d/ipv6.conf
-      regexp='^options ipv6 disable.*'
-      line="options ipv6 disable=1"
-      state=present
-      create=yes
-      backup=true
-    register: is_ipv6_setting
-
-  - name: add ulimits settings
-    template: >
-      src=enableulimit.sh.j2
-      dest=/etc/profile.d/enableulimit.sh
-      owner=root
-      group=root
-      mode=0644
-      backup=true
-    register: is_ulimits_setting
-
   always:
   - name: backup settings
     include: backup.yml
     with_flattened:
       - "{{ is_hosts_setting.results|default() }}"
       - "{{ is_selinux_setting|default() }}"
-      - "{{ is_network_setting|default() }}"
-      - "{{ is_ipv6_setting|default() }}"
-      - "{{ is_ulimits_setting|default() }}"
     loop_control:
       loop_var: backup_item
 
