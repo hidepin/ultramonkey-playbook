@@ -57,12 +57,12 @@
   with_items: "{{ common_user }}"
   when: common_user is defined and common_user != None
 
-- name: CentOS6 only setting
-  include: centos6.yml
+- name: RHEL6 family only setting
+  include: rhel6_family.yml
   when: ansible_distribution_major_version == '6'
 
-- name: CentOS7 only setting
-  include: centos7.yml
+- name: RHEL7 family only setting
+  include: rhel7_family.yml
   when: ansible_distribution_major_version == '7'
 
 - name: reboot after change selinux
