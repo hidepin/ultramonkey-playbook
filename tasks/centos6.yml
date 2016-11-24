@@ -33,19 +33,6 @@
   notify:
     - ntpd restart
 
-- name: (centos6) backup step-tickers setting
-  fetch: >
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_step_tickers_setting.backup_file|default() }}"
-    - /etc/ntp/step-tickers
-  when: is_step_tickers_setting|changed
-
-- name: (centos6) delete step-tickers setting backup
-  file: path="{{ is_step_tickers_setting.backup_file }}" state=absent
-  when: is_step_tickers_setting|changed
-
 - name: (centos6) ntp.conf settings
   template: >
     src=ntp.conf.j2
@@ -59,19 +46,6 @@
   notify:
     - ntpd restart
 
-- name: (centos6) backup ntp.conf setting
-  fetch:
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_ntp_conf_setting.backup_file|default() }}"
-    - /etc/ntp.conf
-  when: is_ntp_conf_setting|changed
-
-- name: (centos6) delete ntp.conf setting backup
-  file: path="{{ is_ntp_conf_setting.backup_file }}" state=absent
-  when: is_ntp_conf_setting|changed
-
 - name: (centos6) /etc/sysconfig/ntpd settings
   template: >
     src=etc_sysconfig_ntpd.j2
@@ -84,19 +58,6 @@
   when: ntp_server is defined
   notify:
     - ntpd restart
-
-- name: (centos6) backup ntpd setting
-  fetch: >
-    src="{{ item }}"
-    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
-  with_items:
-    - "{{ is_ntpd_setting.backup_file|default() }}"
-    - /etc/sysconfig/ntpd
-  when: is_ntpd_setting|changed
-
-- name: (centos6) delete ntpd setting backup
-  file: path="{{ is_ntpd_setting.backup_file }}" state=absent
-  when: is_ntpd_setting|changed
 
 - name: (centos6) ntpd running check
   command: service ntpd status
@@ -115,3 +76,12 @@
 - name: (centos6) enable ntpd services
   service: name=ntpd state=started enabled=yes
   when: ntp_server is defined
+
+- name: backup settings
+  include: backup.yml
+  with_flattened:
+    - "{{ is_step_tickers_setting|default() }}"
+    - "{{ is_ntp_conf_setting|default() }}"
+    - "{{ is_ntpd_setting|default() }}"
+  loop_control:
+    loop_var: backup_item
