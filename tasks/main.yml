@@ -65,10 +65,16 @@
     include: backup.yml
     with_items:
       - "{{ is_selinux_setting|default() }}"
-      - "{{ is_hosts_setting.results[0]|default() }}"
       - "{{ is_network_setting|default() }}"
       - "{{ is_ipv6_setting|default() }}"
       - "{{ is_ulimits_setting|default() }}"
+    loop_control:
+      loop_var: backup_item
+
+  - name: backup settings
+    include: backup.yml
+    with_flattened:
+      - "{{ is_hosts_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
