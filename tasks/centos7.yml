@@ -14,14 +14,20 @@
   when: ntp_server is defined
 
 - name: (centos7) chrony.conf settings
-  template: src=chrony.conf.j2 dest=/etc/chrony.conf owner=root group=root mode=0644 backup=true
+  template: >
+    src=chrony.conf.j2
+    dest=/etc/chrony.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=true
   register: is_chrony_conf_setting
   when: ntp_server is defined
   notify:
     - chronyd restart
 
 - name: (centos7) backup chrony.conf setting
-  fetch:
+  fetch: >
     src="{{ item }}"
     dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
   with_items:
