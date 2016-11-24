@@ -22,15 +22,15 @@
 
 - name: (centos7) backup chrony.conf setting
   fetch:
-    src={{item}}
-    dest="backup/{{ansible_date_time.date}}-{{ansible_date_time.time|regex_replace(':', '')}}"
+    src="{{ item }}"
+    dest="backup/{{ ansible_date_time.date }}-{{ ansible_date_time.time|regex_replace(':', '') }}"
   with_items:
-    - "{{is_chrony_conf_setting.backup_file}}"
+    - "{{ is_chrony_conf_setting.backup_file|default() }}"
     - /etc/chrony.conf
   when: is_chrony_conf_setting|changed
 
 - name: (centos7) delete chrony.conf setting backup
-  file: path={{is_chrony_conf_setting.backup_file}} state=absent
+  file: path="{{ is_chrony_conf_setting.backup_file|default() }}" state=absent
   when: is_chrony_conf_setting|changed
 
 - name: (centos7) enable chronyd services
