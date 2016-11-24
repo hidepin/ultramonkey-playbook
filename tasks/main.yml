@@ -63,18 +63,12 @@
   always:
   - name: backup settings
     include: backup.yml
-    with_items:
+    with_flattened:
+      - "{{ is_hosts_setting.results|default() }}"
       - "{{ is_selinux_setting|default() }}"
       - "{{ is_network_setting|default() }}"
       - "{{ is_ipv6_setting|default() }}"
       - "{{ is_ulimits_setting|default() }}"
-    loop_control:
-      loop_var: backup_item
-
-  - name: backup settings
-    include: backup.yml
-    with_flattened:
-      - "{{ is_hosts_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
