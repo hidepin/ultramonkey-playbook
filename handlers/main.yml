@@ -4,4 +4,4 @@
   service: name=ntpd state=restarted
 
 - name: chronyd restart
-  service: name=chronyd state=restarted
+  systemd: name=chronyd state=restarted
