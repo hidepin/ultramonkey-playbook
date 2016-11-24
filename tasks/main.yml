@@ -10,65 +10,67 @@
   shell: setenforce Permissive
   when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
 
-- name: disable selinux setting
-  lineinfile: >
-    dest=/etc/selinux/config
-    regexp='^SELINUX=.*'
-    line="SELINUX=disabled"
-    state=present
-    backup=true
-  register: is_selinux_setting
+- block:
+  - name: disable selinux setting
+    lineinfile: >
+      dest=/etc/selinux/config
+      regexp='^SELINUX=.*'
+      line="SELINUX=disabled"
+      state=present
+      backup=true
+    register: is_selinux_setting
 
-- name: generate hosts files
-  lineinfile: >
-    dest=/etc/hosts
-    regexp='^{{ item }}.*'
-    line="{{ item }} {{ hostvars[item].ansible_fqdn }} {{ hostvars[item].ansible_hostname }}"
-    state=present
-    backup=true
-  when: hostvars[item].ansible_fqdn is defined
-  register: is_hosts_setting
-  with_items: "{{ groups['all'] }}"
+  - name: generate hosts files
+    lineinfile: >
+      dest=/etc/hosts
+      regexp='^{{ item }}.*'
+      line="{{ item }} {{ hostvars[item].ansible_fqdn }} {{ hostvars[item].ansible_hostname }}"
+      state=present
+      backup=true
+    when: hostvars[item].ansible_fqdn is defined
+    register: is_hosts_setting
+    with_items: "{{ groups['all'] }}"
 
-- name: Add NOZEROCONF
-  lineinfile: >
-    dest=/etc/sysconfig/network
-    regexp="^NOZEROCONF"
-    line="NOZEROCONF=yes"
-    state=present
-    backup=true
-  register: is_network_setting
+  - name: Add NOZEROCONF
+    lineinfile: >
+      dest=/etc/sysconfig/network
+      regexp="^NOZEROCONF"
+      line="NOZEROCONF=yes"
+      state=present
+      backup=true
+    register: is_network_setting
 
-- name: Disable ipv6
-  lineinfile: >
-    dest=/etc/modprobe.d/ipv6.conf
-    regexp='^options ipv6 disable.*'
-    line="options ipv6 disable=1"
-    state=present
-    create=yes
-    backup=true
-  register: is_ipv6_setting
+  - name: Disable ipv6
+    lineinfile: >
+      dest=/etc/modprobe.d/ipv6.conf
+      regexp='^options ipv6 disable.*'
+      line="options ipv6 disable=1"
+      state=present
+      create=yes
+      backup=true
+    register: is_ipv6_setting
 
-- name: add ulimits settings
-  template: >
-    src=enableulimit.sh.j2
-    dest=/etc/profile.d/enableulimit.sh
-    owner=root
-    group=root
-    mode=0644
-    backup=true
-  register: is_ulimits_setting
+  - name: add ulimits settings
+    template: >
+      src=enableulimit.sh.j2
+      dest=/etc/profile.d/enableulimit.sh
+      owner=root
+      group=root
+      mode=0644
+      backup=true
+    register: is_ulimits_setting
 
-- name: backup settings
-  include: backup.yml
-  with_items:
-    - "{{ is_selinux_setting }}"
-    - "{{ is_hosts_setting.results[0] }}"
-    - "{{ is_network_setting }}"
-    - "{{ is_ipv6_setting }}"
-    - "{{ is_ulimits_setting }}"
-  loop_control:
-    loop_var: backup_item
+  always:
+  - name: backup settings
+    include: backup.yml
+    with_items:
+      - "{{ is_selinux_setting|default() }}"
+      - "{{ is_hosts_setting.results[0]|default() }}"
+      - "{{ is_network_setting|default() }}"
+      - "{{ is_ipv6_setting|default() }}"
+      - "{{ is_ulimits_setting|default() }}"
+    loop_control:
+      loop_var: backup_item
 
 - name: Add common group
   group: >
