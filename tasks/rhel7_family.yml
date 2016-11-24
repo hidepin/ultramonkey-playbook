@@ -1,19 +1,19 @@
 ---
-# file: roles/common/tasks/centos7.yml
-- name: (centos7) check firewalld zone
+# file: roles/common/tasks/rhel7_family.yml
+- name: (rhel7 family) check firewalld zone
   shell: firewall-cmd --get-default-zone
   register: is_firewalld_zone
   changed_when: is_firewalld_zone.stdout != 'trusted'
 
-- name: (centos7) Invalid firewall services
+- name: (rhel7 family) Invalid firewall services
   shell: firewall-cmd --set-default-zone=trusted
   when: is_firewalld_zone.stdout != 'trusted'
 
-- name: (centos7) chrony packages install
+- name: (rhel7 family) chrony packages install
   yum: name=chrony state=present
   when: ntp_server is defined
 
-- name: (centos7) chrony.conf settings
+- name: (rhel7 family) chrony.conf settings
   template: >
     src=chrony.conf.j2
     dest=/etc/chrony.conf
@@ -26,7 +26,7 @@
   notify:
     - chronyd restart
 
-- name: (centos7) enable chronyd services
+- name: (rhel7 family) enable chronyd services
   service: name=chronyd state=started enabled=yes
   when: ntp_server is defined
 
