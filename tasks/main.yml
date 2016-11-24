@@ -104,13 +104,5 @@
   when: ansible_distribution_major_version == '7'
 
 - name: reboot after change selinux
-  shell: nohup bash -c "sleep 2s && reboot" &
-  when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
-
-- name: wait for the server to go down (reboot)
-  local_action: wait_for host={{ inventory_hostname }} port=22 state=stopped
-  when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
-
-- name: wait for the server to come up
-  local_action: wait_for host={{ inventory_hostname }} port=22
+  include: reboot.yml
   when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
