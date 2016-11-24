@@ -1,5 +1,24 @@
 ---
 # file: roles/common/tasks/rhel7_family.yml
+- name: (rhel7 family) journald.conf settings
+  ini_file: >
+    dest=/etc/systemd/journald.conf
+    section=Journal
+    option={{ item.option }}
+    value={{ item.value }}
+    backup=true
+  with_items:
+    - { option: 'Storage', value: 'persistent' }
+    - { option: 'RateLimitIntervald', value: '0s' }
+    - { option: 'SystemMaxFileSize', value: '200M' }
+    - { option: 'MaxRetentionSec', value: '100day' }
+    - { option: 'MaxFileSec', value: '1day' }
+  register: is_journald_setting
+  notify: systemd-journald restart
+
+- name: (rhel7 family) create journal log dir
+  file: path=/var/log/
+
 - name: (rhel7 family) check firewalld zone
   shell: firewall-cmd --get-default-zone
   register: is_firewalld_zone
@@ -33,6 +52,7 @@
 - name: backup settings
   include: backup.yml
   with_flattened:
+    - "{{ is_journald_setting.results|default() }}"
     - "{{ is_chrony_conf_setting|default() }}"
   loop_control:
     loop_var: backup_item

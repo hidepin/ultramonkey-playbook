@@ -1,5 +1,8 @@
 ---
 # file: roles/common/handlers/main.yml
+- name: systemd-journald restart
+  systemd: name=systemd-journald.service state=restarted
+
 - name: ntpd restart
   service: name=ntpd state=restarted
 
