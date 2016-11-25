@@ -48,7 +48,7 @@
   when: common_user is defined and common_user != None
 
 - name: Add common user
-  user:
+  user: >
     name="{{ item.name }}"
     password="{{ item.password }}"
     uid="{{ item.uid }}"
