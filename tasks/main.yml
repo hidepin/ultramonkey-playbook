@@ -19,6 +19,7 @@
       state=present
       backup=true
     register: is_selinux_setting
+    notify: reboot
 
   - name: generate hosts files
     lineinfile: >
@@ -64,7 +65,3 @@
 - name: RHEL7 family only setting
   include: rhel7_family.yml
   when: ansible_distribution_major_version == '7'
-
-- name: reboot after change selinux
-  include: reboot.yml
-  when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"

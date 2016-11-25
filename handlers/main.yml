@@ -8,3 +8,6 @@
 
 - name: chronyd restart
   systemd: name=chronyd state=restarted
+
+- name: reboot
+  include: reboot.yml
