@@ -10,15 +10,12 @@
     backup=true
   with_items:
     - { option: 'Storage', value: 'persistent' }
-    - { option: 'RateLimitIntervald', value: '0s' }
+    - { option: 'RateLimitInterval', value: '0s' }
     - { option: 'SystemMaxFileSize', value: '200M' }
     - { option: 'MaxRetentionSec', value: '100day' }
     - { option: 'MaxFileSec', value: '1day' }
   register: is_journald_setting
   notify: systemd-journald restart
-
-- name: (rhel7 family) create journal log dir
-  file: path=/var/log/
 
 - name: (rhel7 family) check firewalld zone
   shell: firewall-cmd --get-default-zone
