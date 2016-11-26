@@ -141,8 +141,8 @@
 #nfs my.server.com:/export/tmp
 #ssh user@my.server.com
 #sshkey /root/.ssh/kdump_id_rsa
-path /var/crash
-xfs UUID={{ kdump_partition_uuid }}
+path {{ kdump_path}}
+xfs UUID={{ kdump_partition_uuid.stdout }}
 core_collector makedumpfile -l --message-level 1 -d 0
 #core_collector scp
 #kdump_post /var/crash/scripts/kdump-post.sh

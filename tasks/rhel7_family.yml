@@ -37,6 +37,59 @@
   register: is_rsyslog_setting
   notify: rsyslog restart
 
+- name: (rhel7 family) bios check
+  shell: "[ -d /sys/firmware/efi ] && echo UEFI || echo BIOS"
+  register: bios_mode
+  changed_when: false
+
+- name: (rhel7 family) grub settings (kdump and disable ipv6)
+  copy: >
+    src=etc_default_grub
+    dest=/etc/default/grub
+    owner=root
+    group=root
+    mode=0644
+    backup=true
+  register: is_grub_setting
+
+- name: grub reconfig
+  command: >
+    grub2-mkconfig -o
+    {{ (bios_mode.stdout == "UEFI")|ternary(grub_cfg_uefi, grub_cfg_legacy) }}
+  when: is_grub_setting|changed
+
+- name: (rhel7 family) check kdump partition
+  shell: cat /etc/fstab | grep "{{ kdump_partition }}" | sed 's/^UUID=\([^ ]*\).*/\1/'
+  register: kdump_partition_uuid
+  changed_when: false
+  when: kdump_partition is defined
+
+- name: (rhel7 family) create kdump dir
+  file: >
+    path="{{kdump_partition}}{{kdump_path}}"
+    state=directory
+    recurse=yes
+    owner=root
+    group=root
+    mode=0755
+  when: kdump_partition_uuid.stdout is defined
+
+- name: (rhel7 family) kdump.conf settings
+  template: >
+    src=kdump.conf.j2
+    dest=/etc/kdump.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=true
+  register: is_kdump_setting
+  when: kdump_partition_uuid.stdout is defined
+  notify: kdump restart
+
+- name: (rhel7 family) enable kdump services
+  service: name=kdump.service enabled=yes
+  when: kdump_partition_uuid.stdout is defined
+
 - name: (rhel7 family) check firewalld zone
   shell: firewall-cmd --get-default-zone
   register: is_firewalld_zone
@@ -71,6 +124,8 @@
   with_flattened:
     - "{{ is_journald_setting.results|default() }}"
     - "{{ is_rsyslog_setting|default() }}"
+    - "{{ is_grub_setting|default() }}"
+    - "{{ is_kdump_setting|default() }}"
     - "{{ is_chrony_conf_setting|default() }}"
   loop_control:
     loop_var: backup_item

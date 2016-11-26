@@ -1,6 +1,10 @@
 ---
 # file: roles/common/defaults/main.yml
 #ntp_server: 172.16.111.1
+grub_cfg_uefi: "/boot/efi/EFI/{{ ansible_distribution|lower }}/grub.cfg"
+grub_cfg_legacy: "/boot/grub2/grub.cfg"
+#kdump_partition: "/dump"
+kdump_path: "/var/crash"
 #common_user:
 #  # user/password="hidepin/hidepin123"
 #  - { name: 'hidepin', password: '$1$SomeSalt$buSRLdQkj4QgWzx.tbjqv1', uid: '1000', group: 'hidepin', gid: '1000' }
