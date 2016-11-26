@@ -1,7 +1,16 @@
 ---
 # file: roles/common/handlers/main.yml
+- name: systemd-journald restart
+  systemd: name=systemd-journald.service state=restarted
+
+- name: rsyslog restart
+  systemd: name=rsyslog.service state=restarted
+
+- name: kdump restart
+  systemd: name=kdump.service state=restarted
+
 - name: ntpd restart
   service: name=ntpd state=restarted
 
 - name: chronyd restart
-  service: name=chronyd state=restarted
+  systemd: name=chronyd state=restarted
