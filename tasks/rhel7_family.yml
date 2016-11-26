@@ -1,5 +1,14 @@
 ---
 # file: roles/common/tasks/rhel7_family.yml
+- name: (rhel7 family) runlevel check
+  command: systemctl get-default
+  register: runlevel
+  changed_when: false
+
+- name: (rhel7 family) set multi-user.target
+  command: systemctl set-default multi-user.target
+  when: runlevel.stdout == "multi-user.targt"
+
 - name: (rhel7 family) journald.conf settings
   ini_file: >
     dest=/etc/systemd/journald.conf
