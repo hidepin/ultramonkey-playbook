@@ -75,3 +75,7 @@
     - "{{ is_chrony_conf_setting|default() }}"
   loop_control:
     loop_var: backup_item
+
+- name: reboot after kdump setting
+  include: reboot.yml
+  when: is_grub_setting|changed
