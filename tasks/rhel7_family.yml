@@ -17,6 +17,17 @@
   register: is_journald_setting
   notify: systemd-journald restart
 
+- name: (rhel7 family) rsyslog.conf settings
+  copy: >
+    src=rsyslog.conf
+    dest=/etc/rsyslog.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=true
+  register: is_rsyslog_setting
+  notify: rsyslog restart
+
 - name: (rhel7 family) check firewalld zone
   shell: firewall-cmd --get-default-zone
   register: is_firewalld_zone
@@ -51,6 +62,7 @@
   include: backup.yml
   with_flattened:
     - "{{ is_journald_setting.results|default() }}"
+    - "{{ is_rsyslog_setting }}"
     - "{{ is_chrony_conf_setting|default() }}"
   loop_control:
     loop_var: backup_item
