@@ -9,6 +9,9 @@
   command: systemctl set-default multi-user.target
   when: runlevel.stdout == "multi-user.targt"
 
+- name: (rhel7 family) disable firewalld services
+  systemd: name=firewalld.service enabled=no state=stopped
+
 - block:
   - name: (rhel7 family) journald.conf settings
     ini_file: >
@@ -90,15 +93,6 @@
   - name: (rhel7 family) enable kdump services
     service: name=kdump.service enabled=yes
     when: kdump_partition_uuid.stdout is defined
-
-  - name: (rhel7 family) check firewalld zone
-    shell: firewall-cmd --get-default-zone
-    register: is_firewalld_zone
-    changed_when: is_firewalld_zone.stdout != 'trusted'
-
-  - name: (rhel7 family) Invalid firewall services
-    shell: firewall-cmd --set-default-zone=trusted
-    when: is_firewalld_zone.stdout != 'trusted'
 
   - name: (rhel7 family) chrony packages install
     yum: name=chrony state=present
