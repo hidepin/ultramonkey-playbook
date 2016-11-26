@@ -60,8 +60,7 @@
     backup=true
   register: is_chrony_conf_setting
   when: ntp_server is defined
-  notify:
-    - chronyd restart
+  notify: chronyd restart
 
 - name: (rhel7 family) enable chronyd services
   service: name=chronyd state=started enabled=yes
@@ -71,7 +70,7 @@
   include: backup.yml
   with_flattened:
     - "{{ is_journald_setting.results|default() }}"
-    - "{{ is_rsyslog_setting }}"
+    - "{{ is_rsyslog_setting|default() }}"
     - "{{ is_chrony_conf_setting|default() }}"
   loop_control:
     loop_var: backup_item
