@@ -41,6 +41,37 @@
     register: is_rsyslog_setting
     notify: rsyslog restart
 
+  - name: (rhel7 family) abrt check
+    stat: path=/etc/abrt/abrt.conf
+    register: abrt_conf
+
+  - name: (rhel7 family) abrt.conf settings
+    lineinfile: >
+      dest=/etc/abrt/abrt.conf
+      regexp="^{{ item.option }} =.*"
+      line="{{ item.option }} = {{ item.value }}"
+      state=present
+      backup=true
+    with_items:
+      - { option: 'MaxCrashReportsSize', value: '0' }
+    register: is_abrt_conf_setting
+    when: abrt_conf.stat.exists
+    notify: abrtd restart
+
+  - name: (rhel7 family) abrt-action-save-package-data.conf settings
+    lineinfile: >
+      dest=/etc/abrt/abrt-action-save-package-data.conf
+      regexp="^{{ item.option }} =.*"
+      line="{{ item.option }} = {{ item.value }}"
+      state=present
+      backup=true
+    with_items:
+      - { option: 'OpenGPGCheck', value: 'no' }
+      - { option: 'ProcessUnpackaged', value: 'yes' }
+    register: is_abrt_action_setting
+    when: abrt_conf.stat.exists
+    notify: abrtd restart
+
   - name: (rhel7 family) bios check
     shell: "[ -d /sys/firmware/efi ] && echo UEFI || echo BIOS"
     register: bios_mode
@@ -120,6 +151,8 @@
     with_flattened:
       - "{{ is_journald_setting.results|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
+      - "{{ is_abrt_conf_setting.results|default() }}"
+      - "{{ is_abrt_action_setting.results|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
       - "{{ is_chrony_conf_setting|default() }}"

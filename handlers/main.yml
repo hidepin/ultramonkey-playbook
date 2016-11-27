@@ -6,6 +6,9 @@
 - name: rsyslog restart
   systemd: name=rsyslog.service state=restarted
 
+- name: abrtd restart
+  systemd: name=abrtd.service state=restarted
+
 - name: kdump restart
   systemd: name=kdump.service state=restarted
 
