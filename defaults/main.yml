@@ -27,4 +27,5 @@ limits_setting:
 #  - { domain: 'jboss6', type: 'hard', item: 'nofile', value: '65536' }
 #  - { domain: 'jboss6', type: 'soft', item: 'nproc', value: '8192' }
 #  - { domain: 'jboss6', type: 'hard', item: 'nproc', value: '8192' }
-
+#  - { domain: 'postgres', type: 'soft', item: 'nofile', value: '65536' }
+#  - { domain: 'postgres', type: 'hard', item: 'nofile', value: '65536' }
