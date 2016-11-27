@@ -6,7 +6,7 @@
     regexp="^NOZEROCONF"
     line="NOZEROCONF=yes"
     state=present
-    backup=true
+    backup=yes
   register: is_network_setting
 
 - name: (rhel6 family) Disable ipv6
@@ -16,7 +16,7 @@
     line="options ipv6 disable=1"
     state=present
     create=yes
-    backup=true
+    backup=yes
   register: is_ipv6_setting
 
 - name: (rhel6 family) add ulimits settings
@@ -26,7 +26,7 @@
     owner=root
     group=root
     mode=0644
-    backup=true
+    backup=yes
   register: is_ulimits_setting
 
 - name: (rhel6 family) disable firewall services
@@ -56,7 +56,7 @@
     owner=root
     group=root
     mode=0644
-    backup=true
+    backup=yes
   register: is_step_tickers_setting
   when: ntp_server is defined
   notify:
@@ -69,7 +69,7 @@
     owner=root
     group=root
     mode=0644
-    backup=true
+    backup=yes
   register: is_ntp_conf_setting
   when: ntp_server is defined
   notify:
@@ -82,7 +82,7 @@
     owner=root
     group=root
     mode=0644
-    backup=true
+    backup=yes
   register: is_ntpd_setting
   when: ntp_server is defined
   notify:

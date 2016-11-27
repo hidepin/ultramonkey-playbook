@@ -20,7 +20,7 @@
       option={{ item.option }}
       value={{ item.value }}
       no_extra_spaces=true
-      backup=true
+      backup=yes
     with_items:
       - { option: 'Storage', value: 'persistent' }
       - { option: 'RateLimitInterval', value: '0s' }
@@ -37,7 +37,7 @@
       owner=root
       group=root
       mode=0644
-      backup=true
+      backup=yes
     register: is_rsyslog_setting
     notify: rsyslog restart
 
@@ -51,7 +51,7 @@
       regexp="^{{ item.option }} =.*"
       line="{{ item.option }} = {{ item.value }}"
       state=present
-      backup=true
+      backup=yes
     with_items:
       - { option: 'MaxCrashReportsSize', value: '0' }
     register: is_abrt_conf_setting
@@ -64,7 +64,7 @@
       regexp="^{{ item.option }} =.*"
       line="{{ item.option }} = {{ item.value }}"
       state=present
-      backup=true
+      backup=yes
     with_items:
       - { option: 'OpenGPGCheck', value: 'no' }
       - { option: 'ProcessUnpackaged', value: 'yes' }
@@ -94,7 +94,7 @@
       owner=root
       group=root
       mode=0644
-      backup=true
+      backup=yes
     register: is_grub_setting
 
   - name: grub reconfig
@@ -126,7 +126,7 @@
       owner=root
       group=root
       mode=0644
-      backup=true
+      backup=yes
     register: is_kdump_setting
     when: kdump_partition_uuid.stdout is defined
     notify: kdump restart
@@ -146,7 +146,7 @@
       owner=root
       group=root
       mode=0644
-      backup=true
+      backup=yes
     register: is_chrony_conf_setting
     when: ntp_server is defined
     notify: chronyd restart

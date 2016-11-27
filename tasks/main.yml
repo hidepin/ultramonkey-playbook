@@ -17,7 +17,7 @@
       regexp='^SELINUX=.*'
       line="SELINUX=disabled"
       state=present
-      backup=true
+      backup=yes
     register: is_selinux_setting
 
   - name: generate hosts files
@@ -26,7 +26,7 @@
       regexp='^{{ item }}.*'
       line="{{ item }} {{ hostvars[item].ansible_fqdn }} {{ hostvars[item].ansible_hostname }}"
       state=present
-      backup=true
+      backup=yes
     when: hostvars[item].ansible_fqdn is defined
     register: is_hosts_setting
     with_items: "{{ groups['all'] }}"
