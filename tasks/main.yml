@@ -35,8 +35,8 @@
   - name: backup settings
     include: backup.yml
     with_flattened:
-      - "{{ is_hosts_setting.results|default() }}"
       - "{{ is_selinux_setting|default() }}"
+      - "{{ is_hosts_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
