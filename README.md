@@ -37,6 +37,7 @@ OS初期インストール時の共通設定。
 6. rsyslog設定
 7. abrt設定
 8. kdump設定 (要再起動)
+9. limits設定
 
 # 動作確認済み環境
 
@@ -63,6 +64,7 @@ OS初期インストール時の共通設定。
 - common_user.uid            # 作成するユーザのuid
 - common_user.group          # 作成するユーザのgroup名
 - common_user.gid            # 作成するユーザのgid
+- limits_setting             # /etc/security/limits.confを設定
 
 # 依存関係
 
