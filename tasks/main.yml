@@ -122,6 +122,16 @@
   include: rhel7_family.yml
   when: ansible_distribution_major_version == '7'
 
+- name: force install package
+  include: force_install.yml
+  with_items: "{{ force_install_pkg }}"
+  loop_control:
+    loop_var: package
+
+- name: update package
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items: "{{ update_pkg }}"
+
 - name: reboot after change selinux
   include: reboot.yml
   when: ansible_selinux.status is undefined or ansible_selinux.status != "disabled"
