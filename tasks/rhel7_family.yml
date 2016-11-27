@@ -33,16 +33,6 @@
     systemd: name=chronyd enabled=yes
     when: ntp_server is defined
 
-  - name: (rhel7 family) nsswitch.conf settings
-    lineinfile: >
-      dest=/etc/nsswitch.conf
-      regexp="^(hosts:.*) dns(.*)"
-      line="\1\2"
-      state=present
-      backrefs=yes
-      backup=yes
-    register: is_nsswitch_setting
-
   - name: (rhel7 family) journald.conf settings
     ini_file: >
       dest=/etc/systemd/journald.conf
@@ -160,7 +150,6 @@
     include: backup.yml
     with_flattened:
       - "{{ is_chrony_conf_setting|default() }}"
-      - "{{ is_nsswitch_setting|default() }}"
       - "{{ is_journald_setting.results|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
       - "{{ is_abrt_conf_setting.results|default() }}"
