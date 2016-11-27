@@ -17,3 +17,6 @@
 
 - name: kdump restart
   systemd: name=kdump.service state=restarted
+
+- name: tuned restart
+  systemd: name=tuned.service state=restarted

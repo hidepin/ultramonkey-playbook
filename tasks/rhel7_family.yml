@@ -164,6 +164,27 @@
     with_items: "{{limits_setting}}"
     register: is_limits_setting
 
+  - name: (rhel7 family) create tuned profile settings
+    ini_file: >
+      dest="/etc/tuned/{{ tuned_profile }}/tuned.conf"
+      section={{ item.section }}
+      option={{ item.option }}
+      value={{ item.value }}
+      create=yes
+      backup=yes
+    with_items: "{{tuned_profile_parameter}}"
+    register: is_tuned_profile_setting
+    notify: tuned restart
+
+  - name: (rhel7 family) check active tuned profile
+    shell: "tuned-adm active | sed 's/.*: //'"
+    register: active_tuned_profile
+    changed_when: false
+
+  - name: (rhel7 family) set active tuned profile
+    shell: tuned-adm profile "{{ tuned_profile }}"
+    when: active_tuned_profile.stdout != "{{ tuned_profile }}"
+
   always:
   - name: (rhel7 family) backup settings
     include: backup.yml
@@ -176,6 +197,7 @@
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
       - "{{ is_limits_setting.results|default() }}"
+      - "{{ is_tuned_profile_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
