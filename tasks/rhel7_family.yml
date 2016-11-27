@@ -72,6 +72,16 @@
     when: abrt_conf.stat.exists
     notify: abrtd restart
 
+  - name: (rhel7 family) nsswitch.conf settings
+    lineinfile: >
+      dest=/etc/nsswitch.conf
+      regexp="^(hosts:.*) dns(.*)"
+      line="\1\2"
+      state=present
+      backrefs=yes
+      backup=yes
+    register: is_nsswitch_setting
+
   - name: (rhel7 family) bios check
     shell: "[ -d /sys/firmware/efi ] && echo UEFI || echo BIOS"
     register: bios_mode
@@ -153,6 +163,7 @@
       - "{{ is_rsyslog_setting|default() }}"
       - "{{ is_abrt_conf_setting.results|default() }}"
       - "{{ is_abrt_action_setting.results|default() }}"
+      - "{{ is_nsswitch_setting|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
       - "{{ is_chrony_conf_setting|default() }}"
