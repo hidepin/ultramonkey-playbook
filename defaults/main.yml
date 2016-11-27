@@ -16,3 +16,15 @@ kdump_path: "/var/crash"
 #common_user:
 #  # user/password="hidepin/hidepin123"
 #  - { name: 'hidepin', password: '$1$SomeSalt$buSRLdQkj4QgWzx.tbjqv1', uid: '1000', group: 'hidepin', gid: '1000' }
+limits_setting:
+  - { domain: 'root', type: 'soft', item: 'nofile', value: '65536' }
+  - { domain: 'root', type: 'hard', item: 'nofile', value: '65536' }
+#  - { domain: 'tomcat8', type: 'soft', item: 'nofile', value: '65536' }
+#  - { domain: 'tomcat8', type: 'hard', item: 'nofile', value: '65536' }
+#  - { domain: 'tomcat8', type: 'soft', item: 'nproc', value: '8192' }
+#  - { domain: 'tomcat8', type: 'hard', item: 'nproc', value: '8192' }
+#  - { domain: 'jboss6', type: 'soft', item: 'nofile', value: '65536' }
+#  - { domain: 'jboss6', type: 'hard', item: 'nofile', value: '65536' }
+#  - { domain: 'jboss6', type: 'soft', item: 'nproc', value: '8192' }
+#  - { domain: 'jboss6', type: 'hard', item: 'nproc', value: '8192' }
+

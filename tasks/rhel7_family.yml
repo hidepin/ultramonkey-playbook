@@ -154,6 +154,16 @@
     service: name=kdump.service enabled=yes
     when: kdump_partition_uuid.stdout is defined
 
+  - name: (rhel7 family) ulimits settings
+    lineinfile: >
+      dest=/etc/security/limits.conf
+      regexp="^{{ item.domain }}        {{ item.type }}    {{ item.item }}"
+      line="{{ item.domain }}        {{ item.type }}    {{ item.item }}           {{ item.value }}"
+      state=present
+      backup=yes
+    with_items: "{{limits_setting}}"
+    register: is_limits_setting
+
   always:
   - name: (rhel7 family) backup settings
     include: backup.yml
@@ -165,6 +175,7 @@
       - "{{ is_abrt_action_setting.results|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
+      - "{{ is_limits_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
