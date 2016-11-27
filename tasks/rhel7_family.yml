@@ -152,7 +152,7 @@
     notify: chronyd restart
 
   - name: (rhel7 family) enable chronyd services
-    service: name=chronyd state=started enabled=yes
+    systemd: name=chronyd enabled=yes
     when: ntp_server is defined
 
   always:

@@ -9,11 +9,11 @@
 - name: abrtd restart
   systemd: name=abrtd.service state=restarted
 
+- name: chronyd restart
+  systemd: name=chronyd state=restarted
+
 - name: kdump restart
   systemd: name=kdump.service state=restarted
 
 - name: ntpd restart
   service: name=ntpd state=restarted
-
-- name: chronyd restart
-  systemd: name=chronyd state=restarted
