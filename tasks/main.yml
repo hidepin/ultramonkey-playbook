@@ -31,6 +31,19 @@
     register: is_hosts_setting
     with_items: "{{ groups['all'] }}"
 
+  - name: (rhel7 family) yum proxy settings
+    ini_file: >
+      dest=/etc/yum.conf
+      section=main
+      option={{ item.option }}
+      value={{ item.value }}
+      no_extra_spaces=true
+      backup=yes
+    with_items:
+      - { option: 'proxy', value: "{{ proxy_env.http_proxy|default() }}" }
+    register: is_yum_proxy_setting
+    when: proxy_env.http_proxy is defined
+
   - name: nsswitch.conf settings
     lineinfile: >
       dest=/etc/nsswitch.conf
@@ -48,6 +61,7 @@
     with_flattened:
       - "{{ is_selinux_setting|default() }}"
       - "{{ is_hosts_setting.results|default() }}"
+      - "{{ is_yum_proxy_setting.results|default() }}"
       - "{{ is_nsswitch_setting|default() }}"
     loop_control:
       loop_var: backup_item
