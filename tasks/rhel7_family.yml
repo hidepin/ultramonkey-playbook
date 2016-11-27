@@ -1,5 +1,14 @@
 ---
 # file: roles/common/tasks/rhel7_family.yml
+- name: rhel subscription
+  redhat_subscription: >
+    state=present
+    username="{{ rhel_subscription.username|default() }}"
+    password="{{ rhel_subscription.password|default() }}"
+    pool="{{ rhel_subscription.pool|default() }}"
+    autosubscribe=yes
+  when: ansible_distribution == "RedHat" and rhel_subscription is defined
+
 - name: (rhel7 family) runlevel check
   command: systemctl get-default
   register: runlevel
