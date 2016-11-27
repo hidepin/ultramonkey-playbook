@@ -15,6 +15,7 @@ OS初期インストール時の共通設定。
 4. yum proxy設定 (proxyサーバを指定した場合に設定)
 5. DNSの無効化 (nameserverを設定していない場合に実施)
 6. ユーザを作成
+7. パッケージの最新化
 
 ## RHEL6/CentOS6設定
 
@@ -38,6 +39,7 @@ OS初期インストール時の共通設定。
 7. abrt設定
 8. kdump設定 (要再起動)
 9. limits設定
+10. tuned設定
 
 # 動作確認済み環境
 
@@ -65,6 +67,10 @@ OS初期インストール時の共通設定。
 - common_user.group          # 作成するユーザのgroup名
 - common_user.gid            # 作成するユーザのgid
 - limits_setting             # /etc/security/limits.confを設定
+- tuned_profile              # activeにするtuned profile名を設定
+- tuned_profile_parameter    # tunedの設定
+- force_install_pkg          # インストール済みであっても強制インストールするパッケージリスト(kernel等)
+- update_pkg                 # アップデートするパッケージ一覧
 
 # 依存関係
 
