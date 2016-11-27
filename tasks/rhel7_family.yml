@@ -155,7 +155,7 @@
     when: kdump_partition_uuid.stdout is defined
 
   always:
-  - name: backup settings
+  - name: (rhel7 family) backup settings
     include: backup.yml
     with_flattened:
       - "{{ is_chrony_conf_setting|default() }}"

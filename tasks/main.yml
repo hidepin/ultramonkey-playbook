@@ -87,7 +87,7 @@
     when: ansible_dns.nameservers is undefined
 
   always:
-  - name: backup settings
+  - name: common backup settings
     include: backup.yml
     with_flattened:
       - "{{ is_selinux_setting|default() }}"
