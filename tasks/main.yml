@@ -63,7 +63,7 @@
     register: is_hosts_setting
     with_items: "{{ groups['all'] }}"
 
-  - name: (rhel7 family) yum proxy settings
+  - name: yum proxy settings
     ini_file: >
       dest=/etc/yum.conf
       section=main
