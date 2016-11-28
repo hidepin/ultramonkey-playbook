@@ -69,14 +69,13 @@
     register: abrt_conf
 
   - name: (rhel7 family) abrt.conf settings
-    lineinfile: >
+    copy: >
+      src=abrt.conf
       dest=/etc/abrt/abrt.conf
-      regexp="^{{ item.option }} =.*"
-      line="{{ item.option }} = {{ item.value }}"
-      state=present
+      owner=root
+      group=root
+      mode=0644
       backup=yes
-    with_items:
-      - { option: 'MaxCrashReportsSize', value: '0' }
     register: is_abrt_conf_setting
     when: abrt_conf.stat.exists
     notify: abrtd restart
@@ -186,7 +185,7 @@
       - "{{ is_chrony_conf_setting|default() }}"
       - "{{ is_journald_setting|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
-      - "{{ is_abrt_conf_setting.results|default() }}"
+      - "{{ is_abrt_conf_settings|default() }}"
       - "{{ is_abrt_action_setting.results|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
