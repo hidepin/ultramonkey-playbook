@@ -64,15 +64,13 @@
     with_items: "{{ groups['all'] }}"
 
   - name: yum proxy settings
-    ini_file: >
+    template: >
+      src=yum.conf.j2
       dest=/etc/yum.conf
-      section=main
-      option={{ item.option }}
-      value={{ item.value }}
-      no_extra_spaces=true
+      owner=root
+      group=root
+      mode=0644
       backup=yes
-    with_items:
-      - { option: 'proxy', value: "{{ proxy_env.http_proxy|default() }}" }
     register: is_yum_proxy_setting
     when: proxy_env.http_proxy is defined
 

@@ -7,10 +7,16 @@ exactarch=1
 obsoletes=1
 gpgcheck=1
 plugins=1
+{% if ansible_distribution == "RedHat" %}
+installonly_limit=3
+{% elif ansible_distribution == "CentOS" %}
 installonly_limit=5
 bugtracker_url=http://bugs.centos.org/set_project.php?project_id=23&ref=http://bugs.centos.org/bug_report_page.php?category=yum
 distroverpkg=centos-release
-
+{% endif %}
+{% if proxy_env.http_proxy is defined %}
+proxy={{ proxy_env.http_proxy }}
+{% endif %}
 
 #  This is the default, if you make this bigger yum won't see if the metadata
 # is newer on the remote and so you'll "gain" the bandwidth of not having to
