@@ -37,14 +37,8 @@ tuned_profile_parameter:
   - { section: 'sysctl', option: 'net.ipv4.tcp_keepalive_intvl', value: '5' }
   - { section: 'sysctl', option: 'net.ipv4.tcp_keepalive_probes', value: '5' }
   - { section: 'sysctl', option: 'net.ipv4.tcp_keepalive_time', value: '60' }
-force_install_pkg:
-#  - kernel
-#  - kernel-devel
+kernel_update: True
 update_pkg:
-#  - kernel-tools-libs
-#  - kernel-tools
-#  - kernel-headers
-#  - perf
 #  - glibc
 #  - glibc-common
 #  - glibc-devel
