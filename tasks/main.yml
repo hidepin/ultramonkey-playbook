@@ -43,11 +43,12 @@
 
 - block:
   - name: disable selinux setting
-    lineinfile: >
+    template: >
+      src=etc_selinux_config
       dest=/etc/selinux/config
-      regexp='^SELINUX=.*'
-      line="SELINUX=disabled"
-      state=present
+      owner=root
+      group=root
+      mode=0644
       backup=yes
     register: is_selinux_setting
 
