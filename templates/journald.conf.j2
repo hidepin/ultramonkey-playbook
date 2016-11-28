@@ -13,20 +13,25 @@
 
 [Journal]
 #Storage=auto
+Storage=persistent
 #Compress=yes
 #Seal=yes
 #SplitMode=uid
 #SyncIntervalSec=5m
 #RateLimitInterval=30s
+RateLimitInterval=0s
 #RateLimitBurst=1000
 #SystemMaxUse=
 #SystemKeepFree=
 #SystemMaxFileSize=
+SystemMaxFileSize=200M
 #RuntimeMaxUse=
 #RuntimeKeepFree=
 #RuntimeMaxFileSize=
 #MaxRetentionSec=
+MaxRetentionSec=100day
 #MaxFileSec=1month
+MaxFileSec=1day
 #ForwardToSyslog=yes
 #ForwardToKMsg=no
 #ForwardToConsole=no

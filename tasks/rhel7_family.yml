@@ -43,19 +43,13 @@
     when: ntp_server is defined
 
   - name: (rhel7 family) journald.conf settings
-    ini_file: >
+    template: >
+      src=journald.conf.j2
       dest=/etc/systemd/journald.conf
-      section=Journal
-      option={{ item.option }}
-      value={{ item.value }}
-      no_extra_spaces=true
+      owner=root
+      group=root
+      mode=0644
       backup=yes
-    with_items:
-      - { option: 'Storage', value: 'persistent' }
-      - { option: 'RateLimitInterval', value: '0s' }
-      - { option: 'SystemMaxFileSize', value: '200M' }
-      - { option: 'MaxRetentionSec', value: '100day' }
-      - { option: 'MaxFileSec', value: '1day' }
     register: is_journald_setting
     notify: systemd-journald restart
 
@@ -190,7 +184,7 @@
     include: backup.yml
     with_flattened:
       - "{{ is_chrony_conf_setting|default() }}"
-      - "{{ is_journald_setting.results|default() }}"
+      - "{{ is_journald_setting|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
       - "{{ is_abrt_conf_setting.results|default() }}"
       - "{{ is_abrt_action_setting.results|default() }}"
