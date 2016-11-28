@@ -1,6 +1,6 @@
 ---
 # file: roles/common/tasks/rhel7_family.yml
-- name: rhel subscription
+- name: (rhel7 family) rhel subscription
   redhat_subscription: >
     state=present
     username="{{ rhel_subscription.username|default() }}"
