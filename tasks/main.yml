@@ -75,12 +75,12 @@
     when: proxy_env.http_proxy is defined
 
   - name: nsswitch.conf settings
-    lineinfile: >
+    template: >
+      src=nsswitch.conf.j2
       dest=/etc/nsswitch.conf
-      regexp="^(hosts:.*) dns(.*)"
-      line="\1\2"
-      state=present
-      backrefs=yes
+      owner=root
+      group=root
+      mode=0644
       backup=yes
     register: is_nsswitch_setting
     when: ansible_dns.nameservers is undefined
@@ -91,7 +91,7 @@
     with_flattened:
       - "{{ is_selinux_setting|default() }}"
       - "{{ is_hosts_setting.results|default() }}"
-      - "{{ is_yum_proxy_setting.results|default() }}"
+      - "{{ is_yum_proxy_setting|default() }}"
       - "{{ is_nsswitch_setting|default() }}"
     loop_control:
       loop_var: backup_item
