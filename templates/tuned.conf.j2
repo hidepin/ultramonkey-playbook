@@ -1,0 +1,9 @@
+[main]
+{% for item in items.main %}
+{{ item.option }}={{ item.value }}
+{% endfor %}
+
+[sysctl]
+{% for item in items.sysctl %}
+{{ item.option }}={{ item.value }}
+{% endfor %}

@@ -157,14 +157,14 @@
     register: is_limits_setting
 
   - name: (rhel7 family) create tuned profile settings
-    ini_file: >
+    template: >
+      src=tuned.conf.j2
       dest="/etc/tuned/{{ tuned_profile }}/tuned.conf"
-      section={{ item.section }}
-      option={{ item.option }}
-      value={{ item.value }}
-      create=yes
+      owner=root
+      group=root
+      mode=0644
       backup=yes
-    with_items: "{{tuned_profile_parameter}}"
+    with_items: "{{ tuned_profile_parameter }}"
     register: is_tuned_profile_setting
     notify: tuned restart
 
@@ -185,11 +185,11 @@
       - "{{ is_journald_setting|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
       - "{{ is_abrt_conf_settings|default() }}"
-      - "{{ is_abrt_action_setting.results|default() }}"
+      - "{{ is_abrt_action_setting|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
       - "{{ is_limits_setting|default() }}"
-      - "{{ is_tuned_profile_setting.results|default() }}"
+      - "{{ is_tuned_profile_setting|default() }}"
     loop_control:
       loop_var: backup_item
 
