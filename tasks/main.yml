@@ -43,7 +43,7 @@
 
 - block:
   - name: disable selinux setting
-    template: >
+    copy: >
       src=etc_selinux_config
       dest=/etc/selinux/config
       owner=root
