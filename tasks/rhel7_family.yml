@@ -146,11 +146,12 @@
     when: kdump_partition_uuid.stdout is defined
 
   - name: (rhel7 family) ulimits settings
-    lineinfile: >
+    template: >
+      src=limits.conf.j2
       dest=/etc/security/limits.conf
-      regexp="^{{ item.domain }}        {{ item.type }}    {{ item.item }}"
-      line="{{ item.domain }}        {{ item.type }}    {{ item.item }}           {{ item.value }}"
-      state=present
+      owner=root
+      group=root
+      mode=0644
       backup=yes
     with_items: "{{limits_setting}}"
     register: is_limits_setting
@@ -187,7 +188,7 @@
       - "{{ is_abrt_action_setting.results|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
-      - "{{ is_limits_setting.results|default() }}"
+      - "{{ is_limits_setting|default() }}"
       - "{{ is_tuned_profile_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
