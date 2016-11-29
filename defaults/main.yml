@@ -31,9 +31,9 @@ limits_setting:
 #  - { domain: 'postgres', type: 'hard', item: 'nofile', value: '65536' }
 tuned_profile: 'default'
 tuned_profile_parameter:
-  - main:
+  main:
     - { option: 'include', value: 'throughput-performance' }
-  - sysctl:
+  sysctl:
     - { option: 'net.ipv4.ip_local_port_range', value: '32768 64999' }
     - { option: 'net.core.somaxconn', value: '511' }
     - { option: 'net.ipv4.tcp_keepalive_intvl', value: '5' }

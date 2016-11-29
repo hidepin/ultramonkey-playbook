@@ -153,8 +153,17 @@
       group=root
       mode=0644
       backup=yes
-    with_items: "{{limits_setting}}"
+    with_items: "{{ limits_setting }}"
     register: is_limits_setting
+
+  - name: (rhel7 family) create tuned profile dir
+    file: >
+      path="/etc/tuned/{{ tuned_profile }}"
+      state=directory
+      recurse=yes
+      owner=root
+      group=root
+      mode=0755
 
   - name: (rhel7 family) create tuned profile settings
     template: >
@@ -189,7 +198,7 @@
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
       - "{{ is_limits_setting|default() }}"
-      - "{{ is_tuned_profile_setting|default() }}"
+      - "{{ is_tuned_profile_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
 
