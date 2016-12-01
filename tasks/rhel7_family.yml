@@ -81,8 +81,8 @@
     notify: abrtd restart
 
   - name: (rhel7 family) abrt-action-save-package-data.conf settings
-    copy: >
-      src=abrt-action-save-package-data.conf
+    template: >
+      src=abrt-action-save-package-data.conf.j2
       dest=/etc/abrt/abrt-action-save-package-data.conf
       owner=root
       group=root
