@@ -80,6 +80,8 @@
     when: abrt_conf.stat.exists
     notify: abrtd restart
 
+  - debug: var=is_abrt_conf_setting
+
   - name: (rhel7 family) abrt-action-save-package-data.conf settings
     copy: >
       src=abrt-action-save-package-data.conf
@@ -192,7 +194,7 @@
       - "{{ is_chrony_conf_setting|default() }}"
       - "{{ is_journald_setting|default() }}"
       - "{{ is_rsyslog_setting|default() }}"
-      - "{{ is_abrt_conf_settings|default() }}"
+      - "{{ is_abrt_conf_setting|default() }}"
       - "{{ is_abrt_action_setting|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
