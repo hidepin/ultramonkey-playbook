@@ -196,7 +196,7 @@
       - "{{ is_abrt_action_setting|default() }}"
       - "{{ is_grub_setting|default() }}"
       - "{{ is_kdump_setting|default() }}"
-      - "{{ is_limits_setting|default() }}"
+      - "{{ is_limits_setting.results[0]|default() }}"
       - "{{ is_tuned_profile_setting.results|default() }}"
     loop_control:
       loop_var: backup_item
