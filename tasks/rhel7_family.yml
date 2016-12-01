@@ -80,8 +80,6 @@
     when: abrt_conf.stat.exists
     notify: abrtd restart
 
-  - debug: var=is_abrt_conf_setting
-
   - name: (rhel7 family) abrt-action-save-package-data.conf settings
     copy: >
       src=abrt-action-save-package-data.conf
