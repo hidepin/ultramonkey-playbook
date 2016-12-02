@@ -106,7 +106,7 @@
   service: name=ntpd state=started enabled=yes
   when: ntp_server is defined
 
-- name: (rhel7 family) backup settings
+- name: (rhel6 family) backup settings
   include: backup.yml
   with_flattened:
     - "{{ is_network_setting|default() }}"
