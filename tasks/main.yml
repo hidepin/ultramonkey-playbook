@@ -96,6 +96,14 @@
     loop_control:
       loop_var: backup_item
 
+- name: kernel update
+  include: kernel_update.yml
+  when: kernel_update
+
+- name: update package
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items: "{{ update_pkg }}"
+
 - name: RHEL6 family only setting
   include: rhel6_family.yml
   when: ansible_distribution_major_version == '6'
@@ -120,14 +128,6 @@
     comment="{{ item.name }}"
   with_items: "{{ common_user }}"
   when: common_user is defined and common_user != None
-
-- name: kernel update
-  include: kernel_update.yml
-  when: kernel_update
-
-- name: update package
-  yum: name={{ item }} state=latest update_cache=yes
-  with_items: "{{ update_pkg }}"
 
 - name: reboot after change selinux
   include: reboot.yml
