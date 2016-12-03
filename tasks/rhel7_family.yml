@@ -16,7 +16,7 @@
 
 - name: (rhel7 family) set multi-user.target
   command: systemctl set-default multi-user.target
-  when: runlevel.stdout == "multi-user.targt"
+  when: runlevel.stdout != "multi-user.target"
 
 - name: (rhel7 family) disable firewalld services
   systemd: name=firewalld.service enabled=no state=stopped
@@ -203,4 +203,4 @@
 
 - name: reboot after kdump setting
   include: reboot.yml
-  when: is_grub_setting|changed
+  when: runlevel.stdout != "multi-user.target" or is_grub_setting|changed
