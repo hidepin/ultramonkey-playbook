@@ -26,13 +26,12 @@
         password: "{{ (rhel_subscription_password.user_input is defined )|ternary(rhel_subscription_password.user_input|default(), rhel_subscription.password) }}"
         pool: "{{ (rhel_subscription_pool.user_input is defined )|ternary(rhel_subscription_pool.user_input|default(), rhel_subscription.pool) }}"
 
-  - name: (rhel7 family) rhel subscription
+  - name: rhel subscription
     redhat_subscription: >
       state=present
       username="{{ rhel_subscription.username|default() }}"
       password="{{ rhel_subscription.password|default() }}"
       pool="{{ rhel_subscription.pool|default() }}"
-
   when: >
     ansible_distribution == "RedHat" and
     rhel_subscription is defined
