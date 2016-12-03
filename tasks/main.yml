@@ -96,14 +96,6 @@
     loop_control:
       loop_var: backup_item
 
-- name: kernel update
-  include: kernel_update.yml
-  when: kernel_update
-
-- name: update package
-  yum: name={{ item }} state=latest update_cache=yes
-  with_items: "{{ update_pkg }}"
-
 - name: RHEL6 family only setting
   include: rhel6_family.yml
   when: ansible_distribution_major_version == '6'
@@ -111,6 +103,14 @@
 - name: RHEL7 family only setting
   include: rhel7_family.yml
   when: ansible_distribution_major_version == '7'
+
+- name: kernel update
+  include: kernel_update.yml
+  when: kernel_update
+
+- name: update package
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items: "{{ update_pkg }}"
 
 - name: Add common group
   group: >
