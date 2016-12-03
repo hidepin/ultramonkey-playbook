@@ -32,6 +32,7 @@
       username="{{ rhel_subscription.username|default() }}"
       password="{{ rhel_subscription.password|default() }}"
       pool="{{ rhel_subscription.pool|default() }}"
+      autosubscribe=true
   when: >
     ansible_distribution == "RedHat" and
     rhel_subscription is defined
