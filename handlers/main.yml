@@ -4,19 +4,19 @@
   service: name=ntpd state=restarted
 
 - name: chronyd restart
-  systemd: name=chronyd state=restarted
+  service: name=chronyd state=restarted
 
 - name: systemd-journald restart
-  systemd: name=systemd-journald.service state=restarted
+  service: name=systemd-journald.service state=restarted
 
 - name: rsyslog restart
-  systemd: name=rsyslog.service state=restarted
+  service: name=rsyslog.service state=restarted
 
 - name: abrtd restart
-  systemd: name=abrtd.service state=restarted
+  service: name=abrtd.service state=restarted
 
 - name: kdump restart
-  systemd: name=kdump.service state=restarted
+  service: name=kdump.service state=restarted
 
 - name: tuned restart
-  systemd: name=tuned.service state=restarted
+  service: name=tuned.service state=restarted

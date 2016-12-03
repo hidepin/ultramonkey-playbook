@@ -10,7 +10,7 @@
   when: runlevel.stdout != "multi-user.target"
 
 - name: (rhel7 family) disable firewalld services
-  systemd: name=firewalld.service enabled=no state=stopped
+  service: name=firewalld.service enabled=no state=stopped
 
 - block:
   - name: (rhel7 family) chrony packages install
@@ -30,7 +30,7 @@
     notify: chronyd restart
 
   - name: (rhel7 family) enable chronyd services
-    systemd: name=chronyd enabled=yes
+    service: name=chronyd enabled=yes
     when: ntp_server is defined
 
   - name: (rhel7 family) journald.conf settings
