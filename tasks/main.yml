@@ -72,7 +72,7 @@
   when: kernel_update
 
 - name: update package
-  yum: name={{ item }} state=latest update_cache=yes
+  package: name={{ item }} state=latest
   with_items: "{{ update_pkg }}"
 
 - name: Add common group
