@@ -23,7 +23,7 @@
 
 - block:
   - name: (rhel7 family) chrony packages install
-    yum: name=chrony state=present
+    package: name=chrony state=present
     when: ntp_server is defined
 
   - name: (rhel7 family) chrony.conf settings
