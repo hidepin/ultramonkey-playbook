@@ -36,7 +36,6 @@ group:      files sss
 #initgroups: files
 
 #hosts:     db files nisplus nis dns
-###hosts:      files dns myhostname
 {% if ansible_distribution == "Fedora" %}
 ###hosts:      files mdns4_minimal [NOTFOUND=return] dns
 hosts:      files mdns4_minimal [NOTFOUND=return]
