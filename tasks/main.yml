@@ -8,6 +8,9 @@
   with_items:
     - openssh-clients
     - libselinux-python
+  when: >
+    ansible_os_family == "RedHat" and
+    not ansible_distribution == "Fedora"
 
 - name: disable selinux
   shell: setenforce Permissive
