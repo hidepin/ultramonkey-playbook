@@ -158,6 +158,10 @@
     with_items: "{{ limits_setting }}"
     register: is_limits_setting
 
+  - name: (rhel7 family) tuned packages install
+    package: name=tuned state=present
+    when: ansible_distribution == "Fedora"
+
   - name: (rhel7 family) create tuned profile dir
     file: >
       path="/etc/tuned/{{ tuned_profile }}"
