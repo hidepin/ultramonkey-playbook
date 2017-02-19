@@ -63,6 +63,8 @@
       backup=yes
     register: is_rsyslog_setting
     notify: rsyslog restart
+  when: >
+    not ansible_distribution == "Fedora"
 
   - name: (rhel7 family) abrt check
     stat: path=/etc/abrt/abrt.conf
