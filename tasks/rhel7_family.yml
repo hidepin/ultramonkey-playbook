@@ -100,8 +100,8 @@
     changed_when: false
 
   - name: (rhel7 family) grub settings (kdump and disable ipv6)
-    copy: >
-      src=etc_default_grub
+    template: >
+      src=etc_default_grub.j2
       dest=/etc/default/grub
       owner=root
       group=root
