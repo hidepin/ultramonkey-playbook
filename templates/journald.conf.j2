@@ -30,6 +30,9 @@ RateLimitInterval=0s
 #SystemKeepFree=
 #SystemMaxFileSize=
 SystemMaxFileSize=200M
+{% if ansible_distribution == "Fedora" %}
+#SystemMaxFiles=100
+{% endif %}
 #RuntimeMaxUse=
 #RuntimeKeepFree=
 #RuntimeMaxFileSize=
