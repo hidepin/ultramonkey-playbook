@@ -190,6 +190,11 @@
       group: root
       mode: 0755
 
+  - name: (rhel7 family) tuned recommend check
+    command: tuned-adm recommend
+    register: tuned_adm_recommend
+    changed_when: false
+
   - name: (rhel7 family) create tuned profile settings
     template:
       src: tuned.conf.j2
