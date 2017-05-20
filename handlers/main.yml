@@ -17,6 +17,3 @@
 
 - name: kdump restart
   service: name=kdump.service state=restarted
-
-- name: tuned restart
-  service: name=tuned.service state=restarted
