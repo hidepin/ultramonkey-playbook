@@ -230,7 +230,6 @@
       state: restarted
     when: is_tuned_profile_setting|changed
 
-
   - name: (rhel7 family) tuned restart
     service:
       name: tuned.service
