@@ -24,7 +24,7 @@
 
   - name: set dest file
     set_fact:
-      dest_file: "{{ backup_item.diff[0].after_header|regex_replace('\ \(.*$', '') }}"
+      dest_file="{{ backup_item.diff[0].after_header|regex_replace('\ \(.*$', '') }}"
     when: backup_item.dest is undefined
 
   - name: "{{ backup_file|default('no') }} backup before setting"
