@@ -8,19 +8,23 @@
     when: backup_time is undefined
 
   - name: set backup file
-    set_fact: backup_file="{{ backup_item.backup_file }}"
+    set_fact:
+      backup_file: "{{ backup_item.backup_file }}"
     when: backup_item.backup_file is defined
 
   - name: set backup file
-    set_fact: backup_file="{{ backup_item.backup }}"
+    set_fact:
+      backup_file: "{{ backup_item.backup }}"
     when: backup_item.backup is defined
 
   - name: set dest file
-    set_fact: dest_file="{{ backup_item.dest }}"
+    set_fact:
+      dest_file: "{{ backup_item.dest }}"
     when: backup_item.dest is defined
 
   - name: set dest file
-    set_fact: dest_file="{{ backup_item.diff[0].after_header|regex_replace('\ \(.*$', '') }}"
+    set_fact:
+      dest_file: "{{ backup_item.diff[0].after_header|regex_replace('\ \(.*$', '') }}"
     when: backup_item.dest is undefined
 
   - name: "{{ backup_file|default('no') }} backup before setting"
