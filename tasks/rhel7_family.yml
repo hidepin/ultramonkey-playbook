@@ -258,5 +258,6 @@
 - name: reboot after kdump setting
   import_tasks: reboot.yml
   when: >
-    runlevel.stdout != "multi-user.target" or
-    is_grub_setting|changed
+    reboot_enabled and
+    ( runlevel.stdout != "multi-user.target" or
+    is_grub_setting|changed)
