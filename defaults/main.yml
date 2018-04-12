@@ -47,3 +47,4 @@ update_pkg:
 #  - glibc-devel
 #  - glibc-headers
 #  - systemd
+kdump_enabled: True
