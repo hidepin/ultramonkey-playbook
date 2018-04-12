@@ -48,3 +48,4 @@ update_pkg:
 #  - glibc-headers
 #  - systemd
 kdump_enabled: True
+reboot_enabled: True
