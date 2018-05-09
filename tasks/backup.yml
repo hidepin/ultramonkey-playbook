@@ -48,4 +48,4 @@
   when: >
     backup_item is defined and
     backup_item != "" and
-    backup_item|changed
+    backup_item is changed
