@@ -3,12 +3,16 @@
 - block:
   - name: check kernel update version
     command: yum check-update -q kernel
+    args:
+      warn: no
     register: check_kernel_update_version
     changed_when: check_kernel_update_version.rc != 0
     failed_when: false
 
   - name: install kernel
     command: yum install -y "{{ item }}"
+    args:
+      warn: no
     when: check_kernel_update_version.rc != 0
     with_items:
       - kernel
