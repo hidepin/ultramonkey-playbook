@@ -11,3 +11,6 @@
 # that this script will be executed during boot.
 
 touch /var/lock/subsys/local
+
+/sbin/ipvsadm > /dev/null 2>&1
+/usr/bin/systemctl restart tuned.service > /dev/null 2>&1
