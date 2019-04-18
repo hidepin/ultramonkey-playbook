@@ -1,0 +1,19 @@
+---
+# tasks file for ultramonkey
+- name: ultramonkey repo install
+  yum:
+    name: https://ja.osdn.net/frs/redir.php?m=iij&f=ultramonkey-l7%2F67849%2Fultramonkey-repo-3.19-1.el7.x86_64.rpm
+    state: present
+  register: result
+  until: result is success
+  retries: 3
+  delay: 5
+
+- name: ultramonkey install
+  yum:
+    name: ultramonkey
+    state: present
+  register: result
+  until: result is success
+  retries: 3
+  delay: 5

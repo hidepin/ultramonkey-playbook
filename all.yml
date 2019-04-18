@@ -3,6 +3,15 @@
 - hosts: all
   roles:
     - { role: common, when: "ansible_os_family == 'RedHat'" }
+    - { role: ultramonkey, when: "ansible_os_family == 'RedHat'" }
+
+  environment:
+    "{{ proxy_env }}"
+
+- hosts: ultramonkey
+  roles:
+    - { role: common, when: "ansible_os_family == 'RedHat'" }
+    - { role: ultramonkey, when: "ansible_os_family == 'RedHat'" }
 
   environment:
     "{{ proxy_env }}"
