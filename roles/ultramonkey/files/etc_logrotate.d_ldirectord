@@ -1,3 +1,8 @@
-/var/log/ldirectord.log {
+/var/log/ultramonkey/ldirectord.log {
+    daily
+    rotate 100
+    compress
+    delaycompress
     missingok
+    ifempty
 }
