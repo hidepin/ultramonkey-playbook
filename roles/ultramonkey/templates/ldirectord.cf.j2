@@ -1,0 +1,24 @@
+# Global Directives
+negotiatetimeout=5
+checktimeout=15
+checkinterval=30
+failurecount=1
+autoreload=no
+logfile="/var/log/ultramonkey/ldirectord.log"
+
+quiescent=no
+
+{% for virtualserver in virtualservers %}
+virtual={{ virtualserver.host }}:{{ virtualserver.port }}
+{% for realserver in virtualserver.realservers %}
+        real={{ realserver.host }}:{{ realserver.port }} gate 1
+{% endfor %}
+        checktype=negotiate
+        service=http
+        request="hachecker/hacheck.html"
+        receive="up and running"
+        scheduler=rr
+        persistent=90
+        protocol=tcp
+        httpmethod=GET
+{% endfor %}

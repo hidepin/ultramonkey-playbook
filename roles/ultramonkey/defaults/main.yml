@@ -1,2 +1,8 @@
 ---
 # defaults file for ultramonkey
+virtualservers:
+  - host: '{{ ansible_default_ipv4.address }}'
+    port: 80
+    realservers:
+      - host: '127.0.0.1'
+        port: 80

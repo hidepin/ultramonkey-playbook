@@ -17,3 +17,50 @@
   until: result is success
   retries: 3
   delay: 5
+
+- name: create ultraonkey log dir
+  file:
+    path: /var/log/ultramonkey
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- block:
+  - name: rc.local settings
+    copy:
+      src: rc.local
+      dest: /etc/rc.d/rc.local
+      owner: root
+      group: root
+      mode: 0755
+      backup: yes
+    notify: network restart
+    register: is_ultramonkey_rc_local_setting
+
+  - name: ldirectord.cf setting
+    template:
+      src: ldirectord.cf.j2
+      dest: /etc/ha.d/ldirectord.cf
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    notify: ldirectord restart
+    register: is_ultramonkey_ldirectord_cf_setting
+
+  - name: etc_logrotate.d_ldirectord setting
+    copy:
+      src: etc_logrotate.d_ldirectord
+      dest: /etc/logrotate.d/ldirectord
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    register: is_etc_logrotate_d_ldirectord_setting
+
+- name: ldirectord start
+  service:
+    name: ldirectord.service
+    state: started
+    enabled: yes

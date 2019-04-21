@@ -1,2 +1,11 @@
 ---
 # handlers file for ultramonkey
+- name: network restart
+  service:
+    name: network
+    state: restarted
+
+- name: ldirectord restart
+  service:
+    name: ldirectord
+    state: restarted
